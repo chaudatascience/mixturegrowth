@@ -1,0 +1,11 @@
+apex==0.9.10dev
+fvcore==0.1.5.post20221221
+matplotlib==3.5.3
+numpy==1.21.5
+Pillow==10.1.0
+python-dotenv==1.0.0
+timm==0.8.3.dev0
+torch==2.0.0
+torchvision==0.15.1
+wandb==0.16.0
+psutil==5.9.6

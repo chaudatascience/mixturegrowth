@@ -1,0 +1,36 @@
+{    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "**/__pycache__": true,
+        "**/**/__pycache__": true,
+        "**/wandb/**": true,
+        "**/multirun/**": true,
+        "**/checkpoints/**": true,
+        "**/snapshots/**": true,
+        "**/.idea/**": true,
+        "**/.ipynb_checkpoints/**": true,
+        "**/_old_logs/**": true,
+    },
+
+    "files.watcherExclude": {
+        "**/checkpoints/**": true,
+        "**/data/**": true,
+        "**/multirun/**": true,
+        "**/wandb/**": true,
+        "**/logs/**": true,    
+        "**/snapshots/**": true,    
+        "**/__tmp_scripts/**": true,
+
+    },
+    "workbench.colorCustomizations": {
+        "titleBar.activeBackground": "#416926"
+    },
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    },
+    "python.formatting.provider": "none",
+}
