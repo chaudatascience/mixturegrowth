@@ -78,9 +78,7 @@ class Block(nn.Module):
         out = self.relu(self.bn1(x, member_id))
         if not self.equalInOut:
             residual = out
-        out = self.conv2(
-            self.relu(self.bn2(self.conv1(out, member_id), member_id)), member_id
-        )
+        out = self.conv2(self.relu(self.bn2(self.conv1(out, member_id), member_id)), member_id)
         if self.convShortcut is not None:
             residual = self.convShortcut(residual, member_id)
         return out + residual
@@ -125,9 +123,7 @@ class WRN(nn.Module):
         self.avgpool = nn.AvgPool2d(8)
         self.classifier = SLinear(args, num_shared_layers, n_channels[3], num_classes)
 
-    def _make_layer(
-        self, args, in_planes, out_planes, num_blocks, stride=1, norm=False
-    ):
+    def _make_layer(self, args, in_planes, out_planes, num_blocks, stride=1, norm=False):
         blocks = []
         blocks.append(Block(args, in_planes, out_planes, stride, norm=norm))
         for i in range(1, num_blocks):
@@ -195,9 +191,7 @@ class ConvBNRelu(nn.Module):
 
 
 class BottleneckBlock(nn.Module):
-    def __init__(
-        self, args, in_channels, mid_channels, downsample, width=1, pool_residual=False
-    ):
+    def __init__(self, args, in_channels, mid_channels, downsample, width=1, pool_residual=False):
         super().__init__()
         self.out_channels = 4 * mid_channels
         # Width factor applies only to inner 3x3 convolution.
@@ -269,9 +263,7 @@ class BottleneckBlock(nn.Module):
         else:
             residual = x
 
-        out = self.out_conv(
-            self.mid_conv(self.in_conv(x, member_id), member_id), member_id
-        )
+        out = self.out_conv(self.mid_conv(self.in_conv(x, member_id), member_id), member_id)
         out += residual
         return self.out_relu(out)
 
@@ -324,9 +316,7 @@ class ResNet(nn.Module):
         # Build the main network.
         modules = []
         out_channels = module_channels[0]
-        for module_idx, (num_layers, mid_channels) in enumerate(
-            zip(module_sizes, module_channels)
-        ):
+        for module_idx, (num_layers, mid_channels) in enumerate(zip(module_sizes, module_channels)):
             blocks = []
             for i in range(num_layers):
                 in_channels = out_channels
@@ -362,9 +352,7 @@ class ResNet(nn.Module):
                 init.constant_(m.bias, 0)
 
     def forward(self, x, member_id):
-        x = self.maxpool(
-            self.conv3(self.conv2(self.conv1(x, member_id), member_id), member_id)
-        )
+        x = self.maxpool(self.conv3(self.conv2(self.conv1(x, member_id), member_id), member_id))
         x = self.block_modules(x, member_id)
         x = self.fc(torch.flatten(self.avgpool(x), 1), member_id)
         return x
@@ -392,67 +380,3 @@ def wrn_imagenet(num_classes, args):
     )
 
     return model
-
-
-# if __name__ == '__main__':
-#
-#     args_imagenet= {'data_path': '/projectnb/ivc-ml/dbash/data/imagenet/ILSVRC/Data/CLS-LOC', 'dataset': 'imagenet', 'arch': 'wrn_imagenet', 'effnet_arch': None, 'depth': 56, 'wide': 4, 'num_templates': 4, 'growth_epochs': [100], 'template_size': [0.5, 0.5, 1.0], 'ensemble_growth_type': 'diag', 'ensemble_train_epochs': 22, 'switch_training': False, 'resume_imagenet': True, 'scale_templates_and_coefs': False, 'scale_templates_and_coefs_growing': False, 'copy_templates_0_to_1': False, 'copy_templates_0_to_1_growing': False, 'reset_scheduler': False, 'reset_scheduler_when_growing': False, 'post_growth_templates': 0, 'model_0_templates': [0, 1], 'model_1_templates': [2, 3], 'model_2_templates': [], 'model_3_templates': [], 'coefficient_init_type': 'orthogonal', 'cross_layer_sharing': False, 'epochs': 172, 'batch_size': 512, 'drop_last': False, 'learning_rate': 0.1, 'momentum': 0.9, 'no_nesterov': True, 'label_smoothing': 0.0, 'optimizer': 'sgd', 'scheduler_type': 'cosine', 'schedule': None, 'gammas': None, 'warmup_epochs': None, 'base_lr': 0.1, 'step_size': None, 'step_gamma': None, 'step_warmup': None, 'decay': 0.0001, 'use_bn': False, 'no_bn_decay': False, 'cutout': False, 'ema_decay': None, 'print_freq': 100, 'save_path': './snapshots_v2/imagenet/ours/seed_769345', 'resume': '/projectnb/ivc-ml/chaupham/growing_v2/snapshots_v2/imagenet/ours/checkpoint61.pth.tar', 'start_epoch': 0, 'evaluate': False, 'cifar_full': True, 'best_loss': False, 'ngpu': 4, 'workers': 14, 'dist': False, 'amp': False, 'no_dp': False, 'manualSeed': 769345, 'tag': 'ours', 'debug': False, 'use_cuda': True}
-#
-#     args_cifar100 = {'data_path': 'data', 'dataset': 'cifar100', 'arch': 'wrn', 'effnet_arch': None, 'depth': 28, 'wide': 10, 'num_templates': 4, 'growth_epochs': [100], 'template_size': [0.5, 0.5, 1.0], 'ensemble_growth_type': 'diag', 'ensemble_train_epochs': 100, 'switch_training': True, 'resume_model_0': '', 'scale_templates_and_coefs': True, 'scale_templates_and_coefs_growing': True, 'copy_templates_0_to_1': False, 'copy_templates_0_to_1_growing': False, 'copy_templates_0_to_1_noise': 0.1, 'reset_scheduler': True, 'reset_scheduler_when_growing': False, 'post_growth_templates': 0, 'model_0_templates': [0, 1], 'model_1_templates': [2, 3], 'model_2_templates': [0, 1, 2, 3], 'model_3_templates': [0, 1, 2, 3], 'coefficient_init_type': 'orthogonal', 'cross_layer_sharing': False, 'epochs': 220, 'batch_size': 128, 'drop_last': False, 'learning_rate': 0.1, 'momentum': 0.9, 'no_nesterov': False, 'label_smoothing': 0.0, 'optimizer': 'sgd', 'scheduler_type': 'cosine', 'schedule': [30, 60, 90], 'gammas': [0.2, 0.2, 0.2], 'warmup_epochs': None, 'base_lr': 0.1, 'step_size': None, 'step_gamma': None, 'step_warmup': None, 'decay': 0.0005, 'use_bn': False, 'no_bn_decay': False, 'cutout': True, 'ema_decay': None, 'lr_growing': 0.001, 'print_freq': 100, 'save_path': './snapshots_v2/cifar100/ours/seed_402640', 'resume': 'snapshots_v2/cifar100/ours/seed_559246/checkpoint_epoch100.pth.tar', 'start_epoch': 0, 'evaluate': False, 'cifar_full': True, 'best_loss': False, 'ngpu': 1, 'workers': 2, 'dist': False, 'amp': False, 'no_dp': False, 'no_wandb': False, 'wandb_log_freq': 7800, 'manualSeed': 402640, 'tag': 'ours', 'scc_id': '796056', 'debug': False, 'use_cuda': True}
-#
-#     def update_children(model, ind, evaluation):
-#         for layer in model.children():
-#             if isinstance(layer, (SConv2d, SLinear, SBatchNorm2d)):
-#                 layer.growth_update(ind, evaluation)
-#             else:
-#                 update_children(layer, ind, evaluation)
-#
-#
-#     def growth_update(model, ind=None, evaluation=False, args=None):
-#         if ind is None:
-#             # assumes we are testing the final model
-#             ind = len(args.template_size) - 1
-#
-#         update_children(model, ind, evaluation)
-#
-#     from utils import analyze_model
-#
-#     ## IMAGENET
-#     print("IMAGENET")
-#     args_imagenet = utils.dict2obj(args_imagenet)
-#
-#     model = wrn_imagenet(num_classes=1000, args=args_imagenet)
-#     x = torch.randn(1, 3, 224, 224)
-#     members = [0]
-#     flops_student_0 = compute_flops_with_members(model, x, member_id=members)
-#     print("flops_student_0: ", flops_student_0)
-#
-#     members = None
-#     growth_update(model, args=args_imagenet)
-#     flops = compute_flops_with_members(model, x, member_id=members)
-#     print("flops: ", flops)
-#     total_params, trainable_params = analyze_model(model, False)
-#     print("total_params: ", total_params)
-#     print("trainable_params: ", trainable_params)
-#
-#     print("------------------------")
-#
-#
-#
-#     ## CIFAR100
-#     print("CIFAR100")
-#     args_cifar100 = utils.dict2obj(args_cifar100)
-#     model = wrn(num_classes=100, args=args_cifar100)
-#     x = torch.randn(1, 3, 32, 32)
-#     members = [0]
-#     flops_student_0 = compute_flops_with_members(model, x, member_id=members)
-#     print("flops_student_0: ", flops_student_0)
-#
-#     members = None
-#     growth_update(model, args=args_cifar100)
-#     flops = compute_flops_with_members(model, x, member_id=members)
-#     print("flops: ", flops)
-#     total_params, trainable_params = analyze_model(model, False)
-#     print("total_params: ", total_params)
-#     print("trainable_params: ", trainable_params)
-#     print("------------------------")

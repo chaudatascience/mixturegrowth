@@ -11,6 +11,7 @@ def check_norm_of_all_layers(model):
             print(name, module.weight.norm().item())
 
 
+## This code was adapted from Eren Gölge
 ## https://github.com/erogol/Net2Net/blob/fffc2b66df8a11577518f7f01287abe264ce30de/net2net.py#L118
 
 

@@ -1,3 +1,9 @@
+## In this implementation, we use a parameter bank ("bank_cfg" and "bank") to share parameters across layers
+# ImageNet model.
+# This is a ResNet v1.5-style model (stride 2 on 3x3 convolutions).
+# In contrast to the above, this applies batchnorm/relu after convolution.
+
+
 import torch
 import torch.nn as nn
 from torch.nn import init
@@ -5,11 +11,6 @@ from torch.nn import init
 from compute_flops import compute_flops, compute_flops_with_members
 from models.layers import *
 from models.bank_cfg import bank_cfg
-
-# ImageNet model.
-# This is a ResNet v1.5-style model (stride 2 on 3x3 convolutions).
-# In contrast to the above, this applies batchnorm/relu after convolution.
-
 
 class ConvBNRelu(nn.Module):
     def __init__(
@@ -324,136 +325,3 @@ def wrn_imagenet_bank(num_classes, args):
     )
 
     return model
-
-
-if __name__ == "__main__":
-    args_imagenet = {
-        "data_path": "/projectnb/ivc-ml/dbash/data/imagenet/ILSVRC/Data/CLS-LOC",
-        "dataset": "imagenet",
-        "arch": "wrn_imagenet",
-        "effnet_arch": None,
-        "depth": 56,
-        "wide": 4.0,
-        "member_template_sets": [0, 1, 0, 1],
-        "num_templates_each_set": [2, 2],
-        "log_model": True,
-        "member_ids": [],
-        "growth_epochs": [90],
-        "template_size": [0.5, 0.5, 1.0],
-        "ensemble_growth_type": "diag",
-        "ensemble_train_epochs": 90,
-        "lr_cosine_epoch": "reset",
-        "warmup_member_0": 0,
-        "log_warmup_member_0": False,
-        "member_0_loss_weight": 1,
-        "switch_training": True,
-        "resume_member_0": "snapshots_v2/imagenet/two_templ_share/seed_957472/checkpoint_epoch90.pth.tar",
-        "resume_member_1": "snapshots_v2/imagenet/switchv8/seed_541480/checkpoint_epoch90.pth.tar",
-        "scale_templates_and_coefs": False,
-        "copy_templates_and_bn_0_to_1": False,
-        "copy_templates_and_bn_0_to_1_noise": 0.01,
-        "reset_scheduler": True,
-        "reset_optimizer": False,
-        "lr_schedule_as_member_0": True,
-        "coefficient_init_type": "orthogonal",
-        "cross_layer_sharing": False,
-        "lr_growing": 0.007598,
-        "small_lr": 1e-05,
-        "lr_growing_min": 1e-06,
-        "reset_lr_scheduler_growing": "1",
-        "reset_optimizer_growing": True,
-        "coefs_growing": "none",
-        "coefs_noise_growing": 1.0,
-        "warmup_01_growing": 0,
-        "scale_templates_and_coefs_growing": False,
-        "lr_warmup_growing": 0,
-        "add_extra_templates_growing": 0,
-        "epochs": 196,
-        "batch_size": 256,
-        "eval_batch_size": 512,
-        "drop_last": False,
-        "learning_rate": 0.007598,
-        "momentum": 0.9,
-        "no_nesterov": True,
-        "label_smoothing": 0.0,
-        "optimizer": "sgd",
-        "scheduler_type": "cosine",
-        "schedule": None,
-        "gammas": None,
-        "warmup_epochs": None,
-        "base_lr": 0.1,
-        "step_size": None,
-        "step_gamma": None,
-        "step_warmup": None,
-        "decay": 0.0001,
-        "use_bn": False,
-        "no_bn_decay": False,
-        "cutout": False,
-        "ema_decay": None,
-        "print_freq": 100,
-        "save_path": "./snapshots_v2/imagenet/test2/seed_300799",
-        "resume": "",
-        "start_epoch": 180,
-        "evaluate": False,
-        "no_cifar_full": False,
-        "best_loss": False,
-        "ngpu": 2,
-        "workers": 6,
-        "dist": False,
-        "amp": False,
-        "no_dp": False,
-        "no_wandb": False,
-        "wandb_log_freq": 7800,
-        "manualSeed": 300799,
-        "tag": "test2",
-        "scc_id": "7393238",
-        "debug": False,
-        "auto_chose_batch_size": True,
-        "use_cuda": True,
-    }
-
-    def update_children(model, ind, evaluation):
-        for layer in model.children():
-            if isinstance(layer, (SConv2d, SLinear, SBatchNorm2d)):
-                layer.growth_update(ind, evaluation)
-            else:
-                update_children(layer, ind, evaluation)
-
-    def growth_update(model, ind=None, evaluation=False, args=None):
-        if ind is None:
-            # assumes we are testing the final model
-            ind = len(args.template_size) - 1
-
-        update_children(model, ind, evaluation)
-
-    from utils import analyze_model
-
-    ## IMAGENET
-    print("IMAGENET")
-    args_imagenet = utils.dict2obj(args_imagenet)
-
-    model = wrn_imagenet_bank(num_classes=1000, args=args_imagenet)
-    # save `model` as a dictionary
-    model_dict = model.state_dict()
-
-    # save `model_dict` as a dictionary
-    # torch.save(model_dict, 'model_dict.pt')
-
-    x = torch.randn(1, 3, 224, 224)
-    members = [0]
-    flops_student_0 = compute_flops_with_members(model, x, member_id=members)
-    print("flops_student_0: ", flops_student_0)
-    print(model(x, 1).shape)
-
-    #
-    #
-    members = None
-    growth_update(model, args=args_imagenet)
-    flops = compute_flops_with_members(model, x, member_id=members)
-    print("flops: ", flops)
-    # total_params, trainable_params = analyze_model(model, False)
-    # print("total_params: ", total_params)
-    # print("trainable_params: ", trainable_params)
-    # #
-    # print("------------------------")
-    #

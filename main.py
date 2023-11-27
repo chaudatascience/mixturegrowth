@@ -78,9 +78,7 @@ parser.add_argument(
         "wrn_imagenet_bank",
         "normal_wrn_imagenet",
     ],
-    help="model architecture: "
-    + " | ".join(model_names)
-    + " (default: shared wide resnet)",
+    help="model architecture: " + " | ".join(model_names) + " (default: shared wide resnet)",
 )
 parser.add_argument(
     "--effnet_arch", metavar="ARCH", default=None, help="EfficientNet architecture type"
@@ -193,12 +191,8 @@ parser.add_argument(
     action="store_true",
     help="scale templates of 2nd student to match the magnitude of the first student",
 )
-parser.add_argument(
-    "--copy_templates_and_bn_0_to_1", default=False, action="store_true", help=""
-)
-parser.add_argument(
-    "--copy_templates_and_bn_0_to_1_noise", type=float, default=0.01, help=""
-)
+parser.add_argument("--copy_templates_and_bn_0_to_1", default=False, action="store_true", help="")
+parser.add_argument("--copy_templates_and_bn_0_to_1_noise", type=float, default=0.01, help="")
 parser.add_argument(
     "--reset_scheduler",
     default=False,
@@ -206,9 +200,7 @@ parser.add_argument(
     help="reset lr scheduler after training the 1st model",
 )
 parser.add_argument("--reset_optimizer", default=False, action="store_true")
-parser.add_argument(
-    "--lr_schedule_as_member_0", default=False, action="store_true", help=""
-)
+parser.add_argument("--lr_schedule_as_member_0", default=False, action="store_true", help="")
 
 
 parser.add_argument(
@@ -219,12 +211,8 @@ parser.add_argument(
 )
 
 # Growth
-parser.add_argument(
-    "--lr_growing", type=float, default=0.0001, help="Learning rate for growing"
-)
-parser.add_argument(
-    "--small_lr", type=float, default=0.00001, help="Learning rate for growing"
-)
+parser.add_argument("--lr_growing", type=float, default=0.0001, help="Learning rate for growing")
+parser.add_argument("--small_lr", type=float, default=0.00001, help="Learning rate for growing")
 
 parser.add_argument(
     "--lr_growing_min",
@@ -298,12 +286,8 @@ parser.add_argument(
 )
 parser.add_argument("--batch_size", type=int, default=128, help="Batch size.")
 parser.add_argument("--eval_batch_size", type=int, default=256, help="Batch size.")
-parser.add_argument(
-    "--drop_last", default=False, action="store_true", help="Drap last small batch"
-)
-parser.add_argument(
-    "--learning_rate", type=float, default=0.1, help="The Learning Rate."
-)
+parser.add_argument("--drop_last", default=False, action="store_true", help="Drap last small batch")
+parser.add_argument("--learning_rate", type=float, default=0.1, help="The Learning Rate.")
 parser.add_argument("--momentum", type=float, default=0.9, help="Momentum.")
 parser.add_argument(
     "--no_nesterov",
@@ -343,24 +327,16 @@ parser.add_argument(
 # parser add lr_templ0_factor
 parser.add_argument("--lr_templ0_factor", type=float, default=1.0, help="")
 
-parser.add_argument(
-    "--warmup_epochs", type=int, default=None, help="Use a linear warmup"
-)
+parser.add_argument("--warmup_epochs", type=int, default=None, help="Use a linear warmup")
 parser.add_argument("--base_lr", type=float, default=0.1, help="Starting learning rate")
 # Step-based schedule used for EfficientNets.
 parser.add_argument("--step_size", type=int, default=None, help="Step size for StepLR")
-parser.add_argument(
-    "--step_gamma", type=float, default=None, help="Decay rate for StepLR"
-)
-parser.add_argument(
-    "--step_warmup", type=int, default=None, help="Number of warmup steps"
-)
+parser.add_argument("--step_gamma", type=float, default=None, help="Decay rate for StepLR")
+parser.add_argument("--step_warmup", type=int, default=None, help="Number of warmup steps")
 
 # Regularization
 # default for swrn
-parser.add_argument(
-    "--decay", type=float, default=5e-4, help="Weight decay (L2 penalty)."
-)
+parser.add_argument("--decay", type=float, default=5e-4, help="Weight decay (L2 penalty).")
 parser.add_argument(
     "--use_bn",
     default=False,
@@ -376,9 +352,7 @@ parser.add_argument(
 parser.add_argument(
     "--cutout", dest="cutout", action="store_true", help="Enable cutout augmentation"
 )
-parser.add_argument(
-    "--ema_decay", type=float, default=None, help="Elastic model averaging decay"
-)
+parser.add_argument("--ema_decay", type=float, default=None, help="Elastic model averaging decay")
 
 # Checkpoints
 parser.add_argument(
@@ -456,18 +430,12 @@ parser.add_argument(
 )
 
 # Wandb log
-parser.add_argument(
-    "--no_wandb", default=False, action="store_true", help="for logging with wandb"
-)
-parser.add_argument(
-    "--wandb_log_freq", type=int, default=7800, help="for logging model with wandb"
-)
+parser.add_argument("--no_wandb", default=False, action="store_true", help="for logging with wandb")
+parser.add_argument("--wandb_log_freq", type=int, default=7800, help="for logging model with wandb")
 
 # Random seed
 parser.add_argument("--manualSeed", type=int, help="manual seed")
-parser.add_argument(
-    "--tag", type=str, default="", help="tag of the run, e.g., 'ours', 'target'"
-)
+parser.add_argument("--tag", type=str, default="", help="tag of the run, e.g., 'ours', 'target'")
 parser.add_argument("--scc_id", type=str, default="", help="SCC job id")
 
 
@@ -533,9 +501,7 @@ if args.use_cuda:
 cudnn.benchmark = True
 
 tag = args.tag
-args.save_path = os.path.join(
-    args.save_path, args.dataset, tag, "seed_" + str(args.manualSeed)
-)
+args.save_path = os.path.join(args.save_path, args.dataset, tag, "seed_" + str(args.manualSeed))
 result_png_path = os.path.join(args.save_path, "training_loss.png")
 
 if get_world_rank() == 0:
@@ -550,15 +516,11 @@ best_los = float("inf")
 
 def load_dataset():
     if args.dataset == "cifar10":
-        mean, std = [x / 255 for x in [125.3, 123.0, 113.9]], [
-            x / 255 for x in [63.0, 62.1, 66.7]
-        ]
+        mean, std = [x / 255 for x in [125.3, 123.0, 113.9]], [x / 255 for x in [63.0, 62.1, 66.7]]
         dataset = dset.CIFAR10
         num_classes = 10
     elif args.dataset == "cifar100":
-        mean, std = [x / 255 for x in [129.3, 124.1, 112.4]], [
-            x / 255 for x in [68.2, 65.4, 70.4]
-        ]
+        mean, std = [x / 255 for x in [129.3, 124.1, 112.4]], [x / 255 for x in [68.2, 65.4, 70.4]]
         dataset = dset.CIFAR100
         num_classes = 100
     elif args.dataset not in ["imagenet", "rand_imagenet"]:
@@ -575,7 +537,6 @@ def load_dataset():
             ]
         )
 
-        
         if args.cutout:
             train_transform.transforms.append(Cutout(n_holes=1, length=16))
         # test_transform = transforms.Compose([transforms.Scale(256), transforms.CenterCrop(224), transforms.ToTensor(), transforms.Normalize(mean, std)])
@@ -588,15 +549,12 @@ def load_dataset():
             torch.distributed.barrier()
 
         if args.evaluate or not args.no_cifar_full:
-
             train_data = dataset(
                 args.data_path, train=True, transform=train_transform, download=True
             )
             test_data = dataset(
                 args.data_path, train=False, transform=test_transform, download=True
             )
-           
-
 
             train_loader = torch.utils.data.DataLoader(
                 train_data,
@@ -605,8 +563,6 @@ def load_dataset():
                 num_workers=args.workers,
                 pin_memory=True,
             )
-
-            
 
             if args.data_growth:
                 indices = list(range(len(train_data)))
@@ -641,9 +597,7 @@ def load_dataset():
             train_data = dataset(
                 args.data_path, train=True, transform=train_transform, download=True
             )
-            test_data = dataset(
-                args.data_path, train=True, transform=test_transform, download=True
-            )
+            test_data = dataset(args.data_path, train=True, transform=test_transform, download=True)
 
             indices = list(range(len(train_data)))
             np.random.shuffle(indices)
@@ -702,17 +656,13 @@ def load_dataset():
 
         # Can just read off SSDs.
         if "efficientnet" in args.arch:
-            image_size = models.efficientnet.EfficientNet.get_image_size(
-                args.effnet_arch
-            )
+            image_size = models.efficientnet.EfficientNet.get_image_size(args.effnet_arch)
             train_transform = transforms.Compose(
                 [
                     models.efficientnet.augmentations.Augmentation(
                         models.efficientnet.augmentations.get_fastautoaugment_policy()
                     ),
-                    models.efficientnet.augmentations.EfficientNetRandomCrop(
-                        image_size
-                    ),
+                    models.efficientnet.augmentations.EfficientNetRandomCrop(image_size),
                     transforms.Resize((image_size, image_size), PIL.Image.BICUBIC),
                     transforms.RandomHorizontalFlip(),
                     transforms.ColorJitter(0.4, 0.4, 0.4),
@@ -720,9 +670,7 @@ def load_dataset():
             )
             test_transform = transforms.Compose(
                 [
-                    models.efficientnet.augmentations.EfficientNetCenterCrop(
-                        image_size
-                    ),
+                    models.efficientnet.augmentations.EfficientNetCenterCrop(image_size),
                     transforms.Resize((image_size, image_size), PIL.Image.BICUBIC),
                 ]
             )
@@ -740,9 +688,7 @@ def load_dataset():
             test_transform = transforms.Compose(
                 [transforms.Resize(256), transforms.CenterCrop((224, 224))]
             )
-        train_data = dset.ImageFolder(
-            args.data_path + "/train", transform=train_transform
-        )
+        train_data = dset.ImageFolder(args.data_path + "/train", transform=train_transform)
         test_data = dset.ImageFolder(
             "/projectnb/ivc-ml/piotrt/data/imagenet/val", transform=test_transform
         )
@@ -785,9 +731,7 @@ def load_dataset():
             pin_memory=True,
             collate_fn=fast_collate,
         )
-        test_loader = PrefetchWrapper(
-            test_loader, imagenet_means, imagenet_stdevs, None
-        )
+        test_loader = PrefetchWrapper(test_loader, imagenet_means, imagenet_stdevs, None)
 
         num_classes = 1000
 
@@ -801,15 +745,9 @@ def load_dataset():
                 transforms.RandomHorizontalFlip(),
             ]
         )
-        test_transform = transforms.Compose(
-            [transforms.Resize(256), transforms.CenterCrop(224)]
-        )
-        train_data = RandomDataset(
-            (3, 256, 256), 1200000, pil=True, transform=train_transform
-        )
-        test_data = RandomDataset(
-            (3, 256, 256), 50000, pil=True, transform=test_transform
-        )
+        test_transform = transforms.Compose([transforms.Resize(256), transforms.CenterCrop(224)])
+        train_data = RandomDataset((3, 256, 256), 1200000, pil=True, transform=train_transform)
+        test_data = RandomDataset((3, 256, 256), 50000, pil=True, transform=test_transform)
         if args.dist:
             train_sampler = torch.utils.data.distributed.DistributedSampler(
                 train_data, num_replicas=get_world_size(), rank=get_world_rank()
@@ -852,9 +790,7 @@ def load_dataset():
             sampler=test_sampler,
             collate_fn=fast_collate,
         )
-        test_loader = PrefetchWrapper(
-            test_loader, imagenet_means, imagenet_stdevs, None
-        )
+        test_loader = PrefetchWrapper(test_loader, imagenet_means, imagenet_stdevs, None)
         num_classes = 1000
     else:
         assert False, "Do not support dataset : {}".format(args.dataset)
@@ -1004,9 +940,7 @@ def get_optimizer(
 
     if not args.reset_optimizer_growing and is_growing and optimizer is not None:
         print_log("add another param group in the optimizer", log)
-        optimizer.add_param_group(
-            {"params": bn_full, "weight_decay": state["decay"], "lr": lr}
-        )
+        optimizer.add_param_group({"params": bn_full, "weight_decay": state["decay"], "lr": lr})
 
         ## update lr for all param_groups
         templ = True
@@ -1041,6 +975,10 @@ def get_optimizer(
 
 def update_optimizer_(optimizer, member: Optional[int] = None, log=None):
     """
+    Load optimizer in case of using checkpoints.
+    Only used when resuming training on ImageNet.
+
+    Optimizer's format:
     op = {
         "coef_0": op_coef0,
         "templ_mem_0": op_templ_mem0,
@@ -1180,7 +1118,7 @@ def freeze_coef_0_1_growing(model):
 
 
 def main():
-    global best_acc, best_los, lr_cosine_scheduler, lr_cosine_epoch, mylogger 
+    global best_acc, best_los, lr_cosine_scheduler, lr_cosine_epoch, mylogger
 
     if get_world_rank() == 0:
         if not os.path.isdir(args.save_path):
@@ -1188,9 +1126,7 @@ def main():
         log = open(
             os.path.join(
                 args.save_path,
-                "log_{}_seed{}.txt".format(
-                    datetime_now("%Y-%b-%d__%H-%M-%S"), args.manualSeed
-                ),
+                "log_{}_seed{}.txt".format(datetime_now("%Y-%b-%d__%H-%M-%S"), args.manualSeed),
             ),
             "w",
         )
@@ -1247,7 +1183,7 @@ def main():
                 training_members=args.member_ids,
                 log=log,
             )
-        
+
     else:
         decay_skip = ["coefficients"]
         if args.no_bn_decay:
@@ -1274,9 +1210,7 @@ def main():
     if args.step_size:
         if args.schedule:
             raise ValueError("Cannot combine regular and step schedules")
-        step_scheduler = torch.optim.lr_scheduler.StepLR(
-            optimizer, args.step_size, args.step_gamma
-        )
+        step_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, args.step_size, args.step_gamma)
         if args.step_warmup:
             step_scheduler = models.efficientnet.GradualWarmupScheduler(
                 optimizer,
@@ -1311,10 +1245,8 @@ def main():
             checkpoint = torch.load(
                 args.resume, map_location=get_cuda_device() if args.ngpu else "cpu"
             )
-           
-            args.start_epoch = (
-                checkpoint["epoch"] if not args.start_epoch else args.start_epoch
-            )
+
+            args.start_epoch = checkpoint["epoch"] if not args.start_epoch else args.start_epoch
             # Hack to load models that were wrapped in (D)DP.
             if args.no_dp:
                 net = torch.nn.DataParallel(net, device_ids=[get_local_rank()])
@@ -1357,8 +1289,6 @@ def main():
     else:
         print_log("=> didn't use any checkpoint for {} model".format(args.arch), log)
 
-    
-
     if args.evaluate_ensemble:
         checkpoint = torch.load(
             args.resume_member_0,
@@ -1395,7 +1325,6 @@ def main():
     growth_iteration = 0
     current_growth = None
 
-   
     project_name = f"grow_v2.2_{args.dataset}"
     mylogger = custom_log.MyLogging(args, net, args.scc_id, project_name=project_name)
     if not args.no_wandb:
@@ -1409,9 +1338,7 @@ def main():
         print_log("=> loaded member 0 from checkpoint", log)
         for k, v in net.state_dict().items():
             if "bank" in k:
-                print_log(
-                    f"after loaded mem 0: norm of {k} is {v.detach().norm()}", log
-                )
+                print_log(f"after loaded mem 0: norm of {k} is {v.detach().norm()}", log)
 
     if args.resume_member_1:
         new_dict = load_member(net.state_dict(), args.resume_member_1, member_id=1)
@@ -1433,9 +1360,7 @@ def main():
     else:
         print_log("before training, check on (pre-trained) model performance ", log)
         member_id_list = None if args.growth_epochs[0] == -1 else [0, 1]
-        validate(
-            test_loader, net, criterion, log, member_id=member_id_list, wandb_log=False
-        )
+        validate(test_loader, net, criterion, log, member_id=member_id_list, wandb_log=False)
         # **Test**  Prec@1 72.398 Prec@5 90.696 Error@1 27.602 Loss 1.16873
         # **Test**  Prec@1 72.230 Prec@5 90.554 Error@1 27.770 Loss 1.17870
     print("---------------------------")
@@ -1458,23 +1383,19 @@ def main():
                 print_log("no growing", log)
             else:
                 if epoch == args.net2net_epoch:
-                    print_log(
-                        "..................... growing net2net", log
-                    )  ## use net2net to grow
+                    print_log("..................... growing net2net", log)  ## use net2net to grow
                     if "cifar" in str(args.dataset).lower():
-                        noise=False
+                        noise = False
                         net = net2net_wrn28_k_wider(net, noise=noise)
                     else:
-                        noise=False
+                        noise = False
                         net = net2net_wrn_imagenet_wider(net, noise=noise)
 
-                    if args.data_growth: ## use full training dataset
+                    if args.data_growth:  ## use full training dataset
                         args.data_growth = False
                         num_classes, train_loader, test_loader = load_dataset()
 
-                    optimizer = get_optimizer(
-                        net, state, lr=args.lr_growing, log=log
-                    )
+                    optimizer = get_optimizer(net, state, lr=args.lr_growing, log=log)
 
                     lr_cosine_scheduler, lr_cosine_epoch = get_cosine_lr_scheduler(
                         args.epochs - epoch,
@@ -1488,13 +1409,10 @@ def main():
             member_id = None
 
         else:  ## template mixing
-            if (
-                len(args.growth_epochs) > growth_iteration
-            ):  ## still in the growing process
+            if len(args.growth_epochs) > growth_iteration:  ## still in the growing process
                 current_growth = args.growth_epochs[growth_iteration]
                 if epoch == current_growth:  ## growth time
-
-                    if args.data_growth: ## use full training dataset
+                    if args.data_growth:  ## use full training dataset
                         args.data_growth = False
                         num_classes, train_loader, test_loader = load_dataset()
 
@@ -1529,9 +1447,7 @@ def main():
                             )
 
                         if args.reset_scheduler:
-                            print_log(
-                                "args.reset_scheduler get_cosine_lr_scheduler()", log
-                            )
+                            print_log("args.reset_scheduler get_cosine_lr_scheduler()", log)
                             if args.lr_schedule_as_member_0:
                                 ep = args.growth_epochs[0]
                             elif args.reset_lr_scheduler_growing == "none":
@@ -1549,10 +1465,7 @@ def main():
                     else:
                         print_log("no ensemble training", log)
 
-                if (
-                    warmup_01_growing > 0
-                    and epoch == warmup_01_growing + current_growth
-                ):
+                if warmup_01_growing > 0 and epoch == warmup_01_growing + current_growth:
                     print_log("unfreeze_templates() of member_id 0", log)
                     toggle_grad_of_template_set(
                         model=net,
@@ -1586,7 +1499,6 @@ def main():
                         wandb_log=False,
                     )
                     growth_iteration += 1
-
 
                     optimizer = get_optimizer(
                         net,
@@ -1628,12 +1540,8 @@ def main():
 
         mylogger.info({"lr": current_learning_rate, "epoch": epoch + 1})
 
-        need_hour, need_mins, need_secs = convert_secs2time(
-            epoch_time.avg * (args.epochs - epoch)
-        )
-        need_time = "[Need: {:02d}:{:02d}:{:02d}]".format(
-            need_hour, need_mins, need_secs
-        )
+        need_hour, need_mins, need_secs = convert_secs2time(epoch_time.avg * (args.epochs - epoch))
+        need_time = "[Need: {:02d}:{:02d}:{:02d}]".format(need_hour, need_mins, need_secs)
 
         print_log(
             "\n==>>{:s} [Epoch={:03d}/{:03d}] {:s} [learning_rate={:6.4f}]".format(
@@ -1661,7 +1569,6 @@ def main():
             member_id,
         )
         torch.cuda.synchronize()
-
 
         val_los, val_acc = validate(
             test_loader,
@@ -1693,16 +1600,12 @@ def main():
                     "state_dict": net.state_dict(),
                     "recorder": recorder,
                     "optimizer": optimizer.state_dict(),
-                    "scheduler": step_scheduler.state_dict()
-                    if step_scheduler
-                    else None,
+                    "scheduler": step_scheduler.state_dict() if step_scheduler else None,
                     "lr_cosine_epoch": lr_cosine_epoch,
                     "lr_cosine_scheduler": lr_cosine_scheduler.state_dict()
                     if lr_cosine_scheduler
                     else None,
-                    "ema": ema_manager.state_dict()
-                    if ema_manager is not None
-                    else None,
+                    "ema": ema_manager.state_dict() if ema_manager is not None else None,
                     "amp": scaler.state_dict() if args.amp else None,
                 },
                 is_best,
@@ -1724,16 +1627,12 @@ def main():
                         "state_dict": net.state_dict(),
                         "recorder": recorder,
                         "optimizer": optimizer.state_dict(),
-                        "scheduler": step_scheduler.state_dict()
-                        if step_scheduler
-                        else None,
+                        "scheduler": step_scheduler.state_dict() if step_scheduler else None,
                         "lr_cosine_epoch": lr_cosine_epoch,
                         "lr_cosine_scheduler": lr_cosine_scheduler.state_dict()
                         if lr_cosine_scheduler
                         else None,
-                        "ema": ema_manager.state_dict()
-                        if ema_manager is not None
-                        else None,
+                        "ema": ema_manager.state_dict() if ema_manager is not None else None,
                         "amp": scaler.state_dict() if args.amp else None,
                     },
                     is_best,
@@ -1773,9 +1672,7 @@ def growth_update(model, ind=None, evaluation=False, log=None):
 
     ## update the template size
     if args.add_extra_templates_growing > 0:
-        print_log(
-            f"--- add_extra_templates_growing={args.add_extra_templates_growing}", log
-        )
+        print_log(f"--- add_extra_templates_growing={args.add_extra_templates_growing}", log)
         assert args.reset_optimizer_growing
         for i in range(len(args.num_templates_each_set)):
             args.num_templates_each_set[i] += args.add_extra_templates_growing
@@ -2101,9 +1998,7 @@ def adjust_learning_rate(optimizer, epoch, gammas, schedule, loss):
             lr = args.base_lr + incr * epoch
         else:
             lr = args.learning_rate
-            assert len(gammas) == len(
-                schedule
-            ), "length of gammas and schedule should be equal"
+            assert len(gammas) == len(schedule), "length of gammas and schedule should be equal"
             for gamma, step in zip(gammas, schedule):
                 if epoch >= step:
                     lr = lr * gamma
@@ -2138,6 +2033,7 @@ def toggle_grad_of_template_set(model, template_set_idx: int, freeze=True):
     for name, param in model.named_parameters():
         if f"template_set_{template_set_idx}" in name:
             param.requires_grad = requires_grad
+
 
 def group_weight_decay(
     net,
@@ -2217,17 +2113,16 @@ def group_weight_decay(
                 "params": [x[1] for x in temp_sets[temp_set_i]],
                 "weight_decay": decay_value,
             }
-          
+
     res = []
     if tmp and args.growth_epochs[0] != -1:
         res.extend(tmp.values())
         print_log(f"group_weight_decay(): template_sets, len(res)={len(res)}", log)
 
     res.append({"params": [x[1] for x in no_decay], "weight_decay": 0.0})
-    
 
     res.append({"params": [x[1] for x in decay], "weight_decay": weight_decay})
- 
+
     print_log(f"group_weight_decay(): no_decay, decay, len(res)={len(res)}", log)
 
     if bn_full_decay is not None and args.growth_epochs[0] != -1:
